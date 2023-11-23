@@ -28,10 +28,10 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-  let g2 = clone_nodes graph in
+  let g3 = gmap graph (fun s -> "test"^s) in
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile g2 in
+  let () = write_file outfile g3 in
 
   print_endline (export graph (fun s -> s))
 
