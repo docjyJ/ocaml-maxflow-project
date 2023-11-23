@@ -112,3 +112,17 @@ let from_file path =
   close_in infile ;
   final_graph
   
+
+let export g translate=
+    let f liste arc =
+        liste^(sprintf "    %d -> %d [label = '%s'];\n" arc.src arc.tgt (translate arc.lbl))
+
+in
+    let header = "digraph finite_state_machine {
+    fontname='Helvetica,Arial,sans-serif';
+    node[fontname='Helvetica,Arial,sans-serif'];
+    edge[fontname='Helvetica,Arial,sans-serif'];
+    rankdir=LR;
+    node [shape = circle];\n"
+in
+   header ^ (e_fold g f "") ^ "}";
