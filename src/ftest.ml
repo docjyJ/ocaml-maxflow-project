@@ -1,5 +1,5 @@
 open Gfile
-open Tools
+open Graph
 
 let () =
 
@@ -28,12 +28,12 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-  let g3 = gmap graph int_of_string in
-  let g4 = add_arc g3 0 4 30 in
-  let g5 = gmap g4 string_of_int in
+  let g3 = Suv.init graph in
+  let al = Suv.find_path g3 0 5 in
+  let () = List.iter (fun a_arc -> Printf.printf "%d ->" a_arc.src) al in
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile g5 in
+  let () = write_file outfile graph in
 
   print_endline (export graph (fun s -> s))
 
