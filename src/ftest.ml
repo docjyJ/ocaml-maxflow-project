@@ -28,10 +28,12 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-  let g3 = gmap graph (fun s -> "test"^s) in
+  let g3 = gmap graph int_of_string in
+  let g4 = add_arc g3 0 4 30 in
+  let g5 = gmap g4 string_of_int in
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile g3 in
+  let () = write_file outfile g5 in
 
   print_endline (export graph (fun s -> s))
 
