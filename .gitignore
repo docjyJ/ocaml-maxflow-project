@@ -1,5 +1,7 @@
 _build/
 .idea/
 outfile
+outfile2
+result.svg
 *~
 *.exe

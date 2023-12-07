@@ -112,16 +112,22 @@ let from_file path =
   close_in infile ;
   final_graph
 
-let export g translate=
-  let f liste arc =
-    liste^(sprintf "    %d -> %d [label = \"%s\"];\n" arc.src arc.tgt (translate arc.lbl))
+let export path graph =
+  (* Open a write-file. *)
+  let ff = open_out path in
 
-  in
-  let header = "digraph finite_state_machine {
-    fontname=\"Helvetica,Arial,sans-serif\";
-    node[fontname=\"Helvetica,Arial,sans-serif\"];
-    edge[fontname=\"Helvetica,Arial,sans-serif\"];
-    rankdir=LR;
-    node [shape = circle];\n"
-  in
-  header ^ (e_fold g f "") ^ "}";
+  (* Write in this file. *)
+  fprintf ff "digraph finite_state_machine {\n";
+  fprintf ff "    fontname=\"Helvetica,Arial,sans-serif\";\n";
+  fprintf ff "    node[fontname=\"Helvetica,Arial,sans-serif\"];\n";
+  fprintf ff "    edge[fontname=\"Helvetica,Arial,sans-serif\"];\n";
+  fprintf ff "    rankdir=LR;\n";
+  fprintf ff "    node [shape = circle];\n";
+
+  (* Write all arcs *)
+  e_iter graph (fun arc -> fprintf ff "    %d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl);
+
+  fprintf ff "}\n" ;
+
+  close_out ff ;
+  ()

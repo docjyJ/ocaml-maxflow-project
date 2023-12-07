@@ -32,14 +32,14 @@ let  find_path =
   loop []
 
 let add_flow g {src=src; tgt=tgt; lbl=(flow, cap)} i =
-let new_flow = flow+i
-in new_arc (new_arc g {src=src; tgt=tgt; lbl=(new_flow, cap)}) {src=tgt; tgt=src; lbl=(cap-new_flow, cap)}
+  let new_flow = flow+i
+  in new_arc (new_arc g {src=src; tgt=tgt; lbl=(new_flow, cap)}) {src=tgt; tgt=src; lbl=(cap-new_flow, cap)}
 
 let apply_path g path =
   let max_flow = get_max path
   in let rec loop acu = function
-    | [] -> acu
-    | h::q -> loop (add_flow acu h max_flow) q
+      | [] -> acu
+      | h::q -> loop (add_flow acu h max_flow) q
   in loop g path
 (*
 let rec find_path_old g a b =
@@ -51,8 +51,8 @@ let rec find_path_old g a b =
   in
   if a = b then [] else arc_loop (out_arcs g a)
 *)
- let step_flow g a b = apply_path g (find_path g a b)
+let step_flow g a b = apply_path g (find_path g a b)
 
- let rec resolve_flow g a b = try
- resolve_flow (step_flow g a b) a b
- with No_Pass _ -> g
+let rec resolve_flow g a b = try
+    resolve_flow (step_flow g a b) a b
+  with No_Pass _ -> g
