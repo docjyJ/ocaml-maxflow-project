@@ -27,8 +27,7 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-  let g3 = Suv.init graph in
-  let outgraph = Suv.graph_flow_to_str (Suv.step_flow g3 0 5) in
+  let outgraph = Suv.graph_flow_to_str (Suv.resolve_flow (Suv.init graph) 0 5) in
 
   (* Rewrite the graph that has been read. *)
   let () = write_file outfile outgraph in

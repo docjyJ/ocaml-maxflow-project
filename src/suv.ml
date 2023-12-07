@@ -41,5 +41,18 @@ let apply_path g path =
     | h::q -> loop (new_arc (new_arc acu (add_flow h max_flow)) (reverse_arc (add_flow h max_flow))) q
     | [] -> acu
   in loop g path
-
+(*
+let rec find_path_old g a b =
+  let rec arc_loop = function
+    | [] -> raise (No_Pass [])
+    | {lbl=(ia, ib);_}::q when ia == ib -> arc_loop q
+    | arc::q -> try arc::(find_path_old g arc.tgt b)
+      with No_Pass _ -> arc_loop q
+  in
+  if a = b then [] else arc_loop (out_arcs g a)
+*)
  let step_flow g a b = apply_path g (find_path g a b)
+
+ let rec resolve_flow g a b = try
+ resolve_flow (step_flow g a b) a b
+ with No_Pass _ -> g

@@ -19,3 +19,5 @@ val add_flow: flow_arc -> int -> flow_arc
 val apply_path: flow_graph -> flow_arc list -> flow_graph
 
 val step_flow: flow_graph -> id -> id -> flow_graph
+
+val resolve_flow: flow_graph -> id -> id -> flow_graph
