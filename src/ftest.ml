@@ -1,5 +1,4 @@
 open Gfile
-open Graph
 
 let () =
 
@@ -29,11 +28,10 @@ let () =
   (* Open file *)
   let graph = from_file infile in
   let g3 = Suv.init graph in
-  let al = Suv.find_path g3 0 5 in
-  let () = List.iter (fun a_arc -> Printf.printf "%d ->" a_arc.src) al in
+  let outgraph = Suv.graph_flow_to_str (Suv.step_flow g3 0 5) in
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile graph in
+  let () = write_file outfile outgraph in
 
-  print_endline (export graph (fun s -> s))
+  print_endline (export outgraph (fun s -> s))
 

@@ -1,18 +1,17 @@
 open Graph
 open Tools
 
-let int_int_of_string i = (0, int_of_string i)
-
-let init gr = gmap gr int_int_of_string
-
 exception No_Pass of id list
 
+type flow_graph = (int * int) graph
 
-let get_max =
-  let rec loop acu = function
-    | {lbl=(a,b);_}::q -> loop (min acu (b-a)) q
-    | [] -> acu
-  in loop max_int
+type flow_arc = (int * int) arc
+
+let init g = gmap g (fun i -> (0, int_of_string i))
+
+let graph_flow_to_str g = gmap g (fun (flow, cap) -> Printf.sprintf "%d/%d" flow cap)
+
+let get_max = List.fold_left (fun i {lbl=(flow, cap);_} -> min i (cap-flow)) max_int
 
 
 
@@ -31,3 +30,14 @@ let  find_path =
     else arc_loop (out_arcs g a)                                    (*On évalue la liste des arcs sortant de a*)
   in
   loop []
+
+let add_flow arc i = let (flow, cap) = arc.lbl in {arc with lbl=(flow+i, cap)}
+
+let apply_path g path =
+  let max_flow = get_max path
+  in let rec loop acu = function
+    | h::q -> loop (new_arc acu (add_flow h max_flow)) q
+    | [] -> acu
+  in loop g path
+
+ let step_flow g a b = apply_path g (find_path g a b)
