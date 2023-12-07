@@ -14,7 +14,7 @@ val get_max: flow_arc list -> int
 
 val find_path: flow_graph -> id -> id -> flow_arc list
 
-val add_flow: flow_arc -> int -> flow_arc
+val add_flow: flow_graph -> flow_arc -> int -> flow_graph
 
 val apply_path: flow_graph -> flow_arc list -> flow_graph
 

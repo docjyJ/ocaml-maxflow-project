@@ -31,15 +31,15 @@ let  find_path =
   in
   loop []
 
-let add_flow arc i = let (flow, cap) = arc.lbl in {arc with lbl=(flow+i, cap)}
-
-let reverse_arc arc = let (flow, cap) = arc.lbl in {src = arc.tgt;tgt = arc.src;lbl = (cap - flow, cap)}
+let add_flow g {src=src; tgt=tgt; lbl=(flow, cap)} i =
+let new_flow = flow+i
+in new_arc (new_arc g {src=src; tgt=tgt; lbl=(new_flow, cap)}) {src=tgt; tgt=src; lbl=(cap-new_flow, cap)}
 
 let apply_path g path =
   let max_flow = get_max path
   in let rec loop acu = function
-    | h::q -> loop (new_arc (new_arc acu (add_flow h max_flow)) (reverse_arc (add_flow h max_flow))) q
     | [] -> acu
+    | h::q -> loop (add_flow acu h max_flow) q
   in loop g path
 (*
 let rec find_path_old g a b =
