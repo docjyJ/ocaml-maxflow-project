@@ -1,5 +1,6 @@
 _build/
-.idea/
+idea/
+vscode/
 outfile
 outfile2
 result.svg
