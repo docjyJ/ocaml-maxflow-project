@@ -22,3 +22,6 @@ val step_flow: flow_graph -> id -> id -> flow_graph
 
 val resolve_flow: flow_graph -> id -> id -> flow_graph
 
+val unify_arc: flow_graph -> flow_graph -> flow_graph
+
+
