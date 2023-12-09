@@ -19,8 +19,9 @@ val find_path: flow graph -> (id*id) -> flow arc list
 
 val add_flow: flow graph -> flow arc -> int -> flow graph
 
-val apply_path:  flow graph -> flow arc list -> flow graph
+val step_flow: flow graph -> (id*id) -> flow graph
 
 val resolve_flow: flow graph -> (id*id) -> flow graph
 
+val resolve_flow_with_step_list: flow graph -> (id*id) -> flow graph list
 

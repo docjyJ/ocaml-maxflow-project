@@ -39,17 +39,23 @@ let  find_path g (a, b) =
 
 let add_flow g {src=src;tgt=tgt;lbl={cap=cap;use=use;spc=spc}} i =new_arc (new_arc g {src=src;tgt=tgt;lbl={cap=cap;use=use+i;spc=spc-i}}) {src=tgt;tgt=src;lbl={cap=cap;use=spc-i;spc=use+i}}
 
-let apply_path g path =
-  let max_flow = List.fold_left min_flow max_int path
-  in let rec loop acu = function
-      | [] -> acu
-      | h::q -> loop (add_flow acu h max_flow) q
+let step_flow g point =
+  let path = find_path g point in
+  let max_flow = List.fold_left min_flow max_int path in
+  let rec loop acu = function
+    | [] -> acu
+    | h::q -> loop (add_flow acu h max_flow) q
   in loop g path
-
 
 
 let resolve_flow input_graph point =
   let rec loop g = try
-      loop (apply_path g (find_path g point))
-    with No_Path _ -> g
-  in unify_arc (loop input_graph) input_graph
+      loop (step_flow g point)
+    with No_Path _ -> unify_arc input_graph g
+  in loop input_graph
+
+let resolve_flow_with_step_list input_graph point =
+  let rec loop g acu = try
+      loop (step_flow g point) (g::acu)
+    with No_Path _ -> List.map (unify_arc input_graph) (g::acu)
+  in loop input_graph []

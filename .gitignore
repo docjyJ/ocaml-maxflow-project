@@ -1,8 +1,7 @@
 _build/
 .idea/
 .vscode/
+outGraph/
 outfile
-outfile2
-result.svg
 *~
 *.exe

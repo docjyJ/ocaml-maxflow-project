@@ -112,7 +112,7 @@ let from_file path =
   close_in infile ;
   final_graph
 
-let export path graph =
+let export path g =
   (* Open a write-file. *)
   let ff = open_out path in
 
@@ -125,9 +125,11 @@ let export path graph =
   fprintf ff "    node [shape = circle];\n";
 
   (* Write all arcs *)
-  e_iter graph (fun arc -> fprintf ff "    %d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl);
+  e_iter g (fun arc -> fprintf ff "    %d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl);
 
   fprintf ff "}\n" ;
 
   close_out ff ;
   ()
+
+let export_all dir = List.iteri (fun i -> export (dir^"/"^(string_of_int i)^".txt"))

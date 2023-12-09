@@ -19,8 +19,9 @@ let () =
   (* Arguments are : infile(1) source-id(2) sink-id(3) outfile(4) *)
 
   let infile = Sys.argv.(1)
+  and objective = (int_of_string Sys.argv.(2), int_of_string Sys.argv.(3))
   and outfile = Sys.argv.(4)
-  and outfile2 = Sys.argv.(5)
+  and out_dir = Sys.argv.(5)
 
   (* These command-line arguments are not used for the moment. *)
   and _source = int_of_string Sys.argv.(2)
@@ -29,12 +30,18 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-  let flow_graph = Tools.label_map graph Suv.flow_of_string in
-  let new_flow_graph = Suv.resolve_flow flow_graph (0,5) in
-  let new_graph = Tools.label_map new_flow_graph Suv.string_of_flow in
+  let flow_graph = Tools.label_map Suv.flow_of_string graph in
+
+  let new_flow_graph = Suv.resolve_flow_with_step_list flow_graph objective in
+
+  let new_graph = List.map (Tools.label_map Suv.string_of_flow) new_flow_graph in
+
 
   (* Rewrite the graph that has been read. *)
-  let () = write_file outfile new_graph in
+  write_file outfile (List.hd new_graph);
+  export_all out_dir new_graph;
+  ()
 
-  export outfile2 new_graph
+
+
 
