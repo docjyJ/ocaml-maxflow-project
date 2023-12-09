@@ -1,17 +1,22 @@
 open Graph
-open Tools
 
-exception No_Pass of id list
+exception No_Path of id list
 
-type flow_graph = (int * int) graph
+type flow ={
+(* Capacité *)
+    cap: int ;
+    (* Utilisé *)
+    use: int ;
+    (* Espace restant *)
+    spc: int }
 
-type flow_arc = (int * int) arc
+let flow_of_string str = let i = int_of_string str in {cap=i; use=0; spc=i}
 
-let init g = gmap g (fun i -> (0, int_of_string i))
+let string_of_flow fl= (string_of_int fl.use) ^ "/" ^ (string_of_int fl.cap)
 
-let graph_flow_to_str g = gmap g (fun (flow, cap) -> Printf.sprintf "%d/%d" flow cap)
 
-let get_max = List.fold_left (fun i {lbl=(flow, cap);_} -> min i (cap-flow)) max_int
+
+let min_flow i ar = min i ar.lbl.spc
 
 
 
@@ -20,23 +25,25 @@ let  find_path =
      b le poibt d'arriver, l est une liste qui retient la série de point par laquel on est passé*)
   let rec loop acu g a b =
     let rec arc_loop acu2 = function
-      | [] -> raise (No_Pass acu)
-      | {lbl=(flow, cap);_}::q when (cap-flow) == 0 -> arc_loop acu2 q    (*Si l'arc est rempli*)
-      | arc::q -> try arc::(loop (arc.src::acu2) g arc.tgt b)         (*On avance, es si on trouve pas on reviens*)
-        with No_Pass failed_acu -> arc_loop failed_acu q             (*On réutilise l'acu qui a fail, comme ça on connait plus vite les points qui vont pas à b*)
+      (*Si il n'y a plus d'arc à exploré on lève une exeption avec la liste des neuds explorés*)
+      | [] -> raise (No_Path acu2)
+      (*Si l'arc est rempli on l'ignore ou
+       *Si on est déjà passé par l'arc on l'ignore*)
+      | h::q when (h.lbl.spc == 0) || (List.mem h.tgt acu)-> arc_loop acu2 q
+      (*On avance, es si on trouve pas on reviens*)
+      | h::q -> try h::(loop (h.src::acu2) g h.tgt b)
+        (*On réutilise l'acu qui a fail, comme ça on connait plus vite les points qui vont pas à b*)
+        with No_Path failed_acu -> arc_loop failed_acu q
     in
-    if a = b then []                                                (*Si on est arrivé on renvoie juste l*)
-    else if List.mem a acu then raise (No_Pass acu)                 (*Si on est déja passé par ce point on remonte*)
-    else arc_loop acu (out_arcs g a)                                    (*On évalue la liste des arcs sortant de a*)
+    (*Si on est arrivé on renvoie juste l sinon on évalue la liste des arcs sortant de a*)
+    if a = b then [] else arc_loop acu (out_arcs g a)
   in
   loop []
 
-let add_flow g {src=src; tgt=tgt; lbl=(flow, cap)} i =
-  let new_flow = flow+i
-  in new_arc (new_arc g {src=src; tgt=tgt; lbl=(new_flow, cap)}) {src=tgt; tgt=src; lbl=(cap-new_flow, cap)}
+let add_flow g {src=src;tgt=tgt;lbl={cap=cap;use=use;spc=spc}} i =new_arc (new_arc g {src=src;tgt=tgt;lbl={cap=cap;use=use+i;spc=spc-i}}) {src=tgt;tgt=src;lbl={cap=cap;use=spc-i;spc=use+i}}
 
 let apply_path g path =
-  let max_flow = get_max path
+  let max_flow = List.fold_left min_flow max_int path
   in let rec loop acu = function
       | [] -> acu
       | h::q -> loop (add_flow acu h max_flow) q
@@ -44,10 +51,10 @@ let apply_path g path =
 (*
 let rec find_path_old g a b =
   let rec arc_loop = function
-    | [] -> raise (No_Pass [])
+    | [] -> raise (No_Path [])
     | {lbl=(ia, ib);_}::q when ia == ib -> arc_loop q
     | arc::q -> try arc::(find_path_old g arc.tgt b)
-      with No_Pass _ -> arc_loop q
+      with No_Path _ -> arc_loop q
   in
   if a = b then [] else arc_loop (out_arcs g a)
 *)
@@ -55,4 +62,4 @@ let step_flow g a b = apply_path g (find_path g a b)
 
 let rec resolve_flow g a b = try
     resolve_flow (step_flow g a b) a b
-  with No_Pass _ -> g
+  with No_Path _ -> g

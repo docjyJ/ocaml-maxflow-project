@@ -1,24 +1,27 @@
 open Graph
 
-exception No_Pass of id list
+(* Type de flow qui enregistre la capacité et sont utilisation actuel *)
+type flow
 
-type flow_graph = (int * int) graph
+(* Exeption lorsqu'un chemin n'est pas trouvé dans un graph
+ * Retourne la liste des neud exploré *)
+exception No_Path of id list
 
-type flow_arc = (int * int) arc
 
-val init: string graph -> flow_graph
+(* Convertie une chaine de caractère en flow *)
+val flow_of_string: string -> flow
 
-val graph_flow_to_str: flow_graph -> string graph
+(* Convertie un flow en chaine de caractère *)
+val string_of_flow: flow -> string
 
-val get_max: flow_arc list -> int
 
-val find_path: flow_graph -> id -> id -> flow_arc list
+val find_path: flow graph -> id -> id -> flow arc list
 
-val add_flow: flow_graph -> flow_arc -> int -> flow_graph
+val add_flow: flow graph -> flow arc -> int -> flow graph
 
-val apply_path: flow_graph -> flow_arc list -> flow_graph
+val apply_path: flow graph -> flow arc list -> flow graph
 
-val step_flow: flow_graph -> id -> id -> flow_graph
+val step_flow: flow graph -> id -> id -> flow graph
 
-val resolve_flow: flow_graph -> id -> id -> flow_graph
+val resolve_flow: flow graph -> id -> id -> flow graph
 
