@@ -29,9 +29,9 @@ let () =
 
   (* Open file *)
   let graph = from_file infile in
-  let flow_graph = Tools.gmap graph Suv.flow_of_string in
-  let new_flow_graph = Suv.resolve_flow flow_graph 0 5 in
-  let new_graph = Tools.gmap new_flow_graph Suv.string_of_flow in
+  let flow_graph = Tools.label_map graph Suv.flow_of_string in
+  let new_flow_graph = Suv.resolve_flow flow_graph (0,5) in
+  let new_graph = Tools.label_map new_flow_graph Suv.string_of_flow in
 
   (* Rewrite the graph that has been read. *)
   let () = write_file outfile new_graph in

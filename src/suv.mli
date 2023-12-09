@@ -15,16 +15,12 @@ val flow_of_string: string -> flow
 val string_of_flow: flow -> string
 
 
-val find_path: flow graph -> id -> id -> flow arc list
+val find_path: flow graph -> (id*id) -> flow arc list
 
 val add_flow: flow graph -> flow arc -> int -> flow graph
 
-val apply_path: flow graph -> flow arc list -> flow graph
+val apply_path:  flow graph -> flow arc list -> flow graph
 
-val step_flow: flow graph -> id -> id -> flow graph
-
-val resolve_flow: flow graph -> id -> id -> flow graph
-
-val unify_arc: flow_graph -> flow_graph -> flow_graph
+val resolve_flow: flow graph -> (id*id) -> flow graph
 
 
