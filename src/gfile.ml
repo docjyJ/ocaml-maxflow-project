@@ -45,7 +45,7 @@ let write_file path graph =
   fprintf ff "\n" ;
 
   (* Write all arcs *)
-  let _ = e_fold graph (fun count arc -> fprintf ff "e %d %d %d %s\n" arc.src arc.tgt count arc.lbl ; count + 1) 0 in
+  let _ = Tools.arc_fold (fun count arc -> fprintf ff "e %d %d %d %s\n" arc.src arc.tgt count arc.lbl ; count + 1) 0 graph in
 
   fprintf ff "\n%% End of graph\n" ;
 
@@ -125,7 +125,7 @@ let export path g =
   fprintf ff "    node [shape = circle];\n";
 
   (* Write all arcs *)
-  e_iter g (fun arc -> fprintf ff "    %d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl);
+  Tools.arc_iter (fun arc -> fprintf ff "    %d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl) g;
 
   fprintf ff "}\n" ;
 
