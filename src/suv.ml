@@ -48,7 +48,7 @@ let apply_path g path =
       | [] -> acu
       | h::q -> loop (add_flow acu h max_flow) q
   in loop g path
-(*
+  (*
 let rec find_path_old g a b =
   let rec arc_loop = function
     | [] -> raise (No_Path [])
@@ -58,8 +58,21 @@ let rec find_path_old g a b =
   in
   if a = b then [] else arc_loop (out_arcs g a)
 *)
-let step_flow g a b = apply_path g (find_path g a b)
+ let step_flow g a b = apply_path g (find_path g a b)
 
 let rec resolve_flow g a b = try
     resolve_flow (step_flow g a b) a b
   with No_Path _ -> g
+
+
+ let unify_arc g1 g2 =
+ let find_lbl_arc arc graph =
+     match find_arc graph arc.src arc.tgt with
+     | None -> assert false
+     | Some x -> x.lbl
+ in
+ let loop (graph1, graph2) arc = (Graph.new_arc graph1 {src=arc.src; tgt=arc.tgt; lbl= (find_lbl_arc arc graph2)}, graph2)
+ in
+    let (fin, _) = e_fold g1 loop ((clone_nodes g1), g2)
+ in
+    fin
