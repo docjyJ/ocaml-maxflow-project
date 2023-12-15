@@ -21,6 +21,7 @@ let add_flow i g {src=src;tgt=tgt;lbl={cap=cap;use=use;spc=spc}} =
   new_arc (new_arc g
              {src=src;tgt=tgt;lbl={cap=cap;use=use+i;spc=spc-i}})
     {src=tgt;tgt=src;lbl={cap=cap;use=spc-i;spc=use+i}}
+let create_revers gin =  let loop g a = add_flow 0 g a in arc_fold loop (clone_nodes gin) gin
 
 
 let step_flow g (a,b) =
@@ -36,10 +37,10 @@ let resolve_flow input_graph point =
   let rec loop g = try
       loop (step_flow g point)
     with No_Path _ -> unify_arc input_graph g
-  in loop input_graph
+  in loop (create_revers input_graph)
 
 let resolve_flow_with_step_list input_graph point =
   let rec loop g acu = try
       loop (step_flow g point) (g::acu)
     with No_Path _ -> List.map (unify_arc input_graph) (g::acu)
-  in loop input_graph []
+  in loop (create_revers input_graph) []
