@@ -1,8 +1,6 @@
 .PHONY: all build format edit demo clean
 
-src?=0
-dst?=12
-graph?=graph2bis.txt
+graph?=super1.txt
 
 all: build
 
@@ -20,10 +18,10 @@ edit:
 demo: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
 	@mkdir -p outGraph
-	./ftest.exe graphs/${graph} $(src) $(dst) outfile outGraph
-	@echo "\n   🥁  RESULT  🥁\n"
-	@cat outfile
-	for f in outGraph/*.txt ; do dot -Tsvg $$f > $${f%.txt}.svg ; done
+	./ftest.exe graphs/${graph} outGraph
+#	@echo "\n   🥁  RESULT  🥁\n"
+#	@cat outfile
+#	for f in outGraph/*.txt ; do dot -Tsvg $$f > $${f%.txt}.svg ; done
 
 clean:
 	find -L . -name "*~" -delete

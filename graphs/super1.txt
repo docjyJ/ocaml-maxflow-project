@@ -1,0 +1,23 @@
+départ jy 1
+départ apo 1
+départ tibo 1
+départ germ 1
+
+arrivé bad 1
+arrivé foot 3
+arrivé tennis 2
+
+choix jy bad 1 2
+choix apo bad 1 1
+choix tibo bad 1 0
+choix germ bad 1 1
+
+choix jy foot 1 1
+choix apo foot 1 0
+choix tibo foot 1 1
+choix germ foot 1 0
+
+choix jy tennis 1 0
+choix apo tennis 1 2
+choix tibo tennis 1 2
+choix germ tennis 1 2
