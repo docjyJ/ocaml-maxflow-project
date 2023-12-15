@@ -10,7 +10,9 @@ type flow = {
   spc: int
 }
 
-let flow_of_string str = let i = int_of_string str in {cap=i; use=0; spc=i}
+let flow_of_string str = let f use cap = {cap=cap; use=use; spc=cap-use}
+  in try Scanf.sscanf str "%d/%d" f
+  with _ -> Scanf.sscanf str "%d" (f 0)
 let string_of_flow fl= (string_of_int fl.use) ^ "/" ^ (string_of_int fl.cap)
 
 let min_flow i ar = min i ar.lbl.spc
