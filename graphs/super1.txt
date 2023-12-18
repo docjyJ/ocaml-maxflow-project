@@ -18,24 +18,28 @@
 
 D "Jean-Yves" 1
 D "Apollinaire" 2
-D "Thibault" 2
+D "Thibault" 3
 D "Jérémy" 1
+D "Nabil" 1/2
 
-A "Badminton" 2
+A "Badminton" 3
 A "Football" 3
-A "Tennis" 2
+A "Tennis" 1/3
 
 L "Jean-Yves" "Badminton" 1
 L "Apollinaire" "Badminton" 1
 L "Thibault" "Badminton" 1
 L "Jérémy" "Badminton" 1
+L "Nabil" "Badminton" 1
 
 L "Jean-Yves" "Football" 1
 L "Apollinaire" "Football" 1
 L "Thibault" "Football" 1
 L "Jérémy" "Football" 1
+L "Nabil" "Football" 1
 
 L "Jean-Yves" "Tennis" 1
 L "Apollinaire" "Tennis" 1
 L "Thibault" "Tennis" 1
 L "Jérémy" "Tennis" 1
+L "Nabil" "Tennis" 1/1
