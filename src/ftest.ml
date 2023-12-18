@@ -14,8 +14,10 @@ let () =
   (* Arguments are : infile(1) source-id(2) sink-id(3) outfile(4) *)
 
   let infile = Sys.argv.(1)
-  (*and out_dir = Sys.argv.(2)*)
+  and out_dir = Sys.argv.(2)
   in
 
   (* Open file *)
-  Flparse.print (Flparse.read_file infile)
+  let d, g = SuvFile.read_file infile
+  in let g_list = Suv.resolve_flow_with_step_list g (0,1)
+  in SuvFile.export_all out_dir d g_list

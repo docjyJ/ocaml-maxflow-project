@@ -1,23 +1,41 @@
-départ jy 1
-départ apo 1
-départ tibo 1
-départ germ 1
+% Utilisation :
+% - Départ "D nom_départ capacité"
+% - Arrivée "A nom_arrivée capacité"
+% - Lien "L nom_départ nom_arrivé capacité"
+% - Commentaire "% commentaire"
+% nom_départ : nom d'un départ
+% nom_arrivée : nom d'une arrivée
+% capacité : capacité utilisable
+% commentaire : texte qui sera ignoré par l'interpréteur
+% Example :
+% Ci-dessous un probemme d'affectation
+% Les départ sont les élèves
+% Les arriver sont les sports
+% Chaque élève choisi le nombre de sports qui est représenté par la capacité du départ
+% Chaque sport à un effectif représenté par la capacité de l'arrivée
+%
 
-arrivé bad 1
-arrivé foot 3
-arrivé tennis 2
 
-choix jy bad 1 2
-choix apo bad 1 1
-choix tibo bad 1 0
-choix germ bad 1 1
+D "Jean-Yves" 1
+D "Apollinaire" 2
+D "Thibault" 2
+D "Jérémy" 1
 
-choix jy foot 1 1
-choix apo foot 1 0
-choix tibo foot 1 1
-choix germ foot 1 0
+A "Badminton" 2
+A "Football" 3
+A "Tennis" 2
 
-choix jy tennis 1 0
-choix apo tennis 1 2
-choix tibo tennis 1 2
-choix germ tennis 1 2
+L "Jean-Yves" "Badminton" 1
+L "Apollinaire" "Badminton" 1
+L "Thibault" "Badminton" 1
+L "Jérémy" "Badminton" 1
+
+L "Jean-Yves" "Football" 1
+L "Apollinaire" "Football" 1
+L "Thibault" "Football" 1
+L "Jérémy" "Football" 1
+
+L "Jean-Yves" "Tennis" 1
+L "Apollinaire" "Tennis" 1
+L "Thibault" "Tennis" 1
+L "Jérémy" "Tennis" 1

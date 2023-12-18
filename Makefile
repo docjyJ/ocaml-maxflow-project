@@ -21,7 +21,7 @@ demo: build
 	./ftest.exe graphs/${graph} outGraph
 #	@echo "\n   🥁  RESULT  🥁\n"
 #	@cat outfile
-#	for f in outGraph/*.txt ; do dot -Tsvg $$f > $${f%.txt}.svg ; done
+	for f in outGraph/*.txt ; do dot -Tsvg $$f > $${f%.txt}.svg ; done
 
 clean:
 	find -L . -name "*~" -delete
