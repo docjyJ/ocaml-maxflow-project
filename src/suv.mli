@@ -1,20 +1,16 @@
 open Graph
 
 (* Type de flow qui enregistre la capacité et sont utilisation actuel *)
-type flow = {
-  (* Capacité *)
-  cap: int ;
-  (* Utilisé *)
-  use: int ;
-  (* Espace restant *)
-  spc: int
-}
+type flow
 
 (* Convertie une chaine de caractère en flow *)
 val flow_of_string: string -> flow
 
 (* Convertie un flow en chaine de caractère *)
 val string_of_flow: flow -> string
+
+val is_full: flow arc -> bool
+val is_empty: flow arc -> bool
 
 (* Trouve un chemin et le remplis *)
 val step_flow: flow graph -> (id*id) -> flow graph

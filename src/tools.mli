@@ -19,6 +19,9 @@ val arc_fold: ('acc -> 'a arc -> 'acc) -> 'acc -> 'a graph -> 'acc
 (* Réécriture pour avoir la même définition que List.iter*)
 val arc_iter: ('a arc -> unit) -> 'a graph -> unit
 
+(* Compte le nombre de node dans un graph *)
+val count_node: 'a graph -> int
+
 (* Crée un nouveaux graphe à partir des neud d'un autre graph *)
 val clone_nodes: 'a graph -> 'b graph
 
@@ -45,4 +48,4 @@ val find_path: ('a arc -> bool) -> 'a graph -> id -> id -> 'a arc list
  * Il est possible d'ajouté une fonction qui permet de refusé le passage par un arc si elle est vrai.
  * Il est possible d'ajouté une fonction qui donne un cout aux differents arc.
  * @raise No_Path si il n'existe pas de chemin. *)
-val find_path_Bell : ('a arc -> bool) -> ('a arc -> int) -> 'a graph -> id -> id -> 'a arc list
+val find_path_bell : ('a arc -> bool) -> ('a arc -> int) -> 'a graph -> id -> id -> 'a arc list

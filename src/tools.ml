@@ -1,19 +1,20 @@
 open Graph
-open Array
 
 exception No_Path of id list
 
 type  access = {
   (* Price *)
-  mutable cost: int ;
+  cost: int ;
   (*Access*)
-  mutable acc: int ;
+  acc: int ;
 }
 
 let node_fold f acu g = n_fold g f acu
 let node_iter f g = n_iter g f
 let arc_fold f acu g = e_fold g f acu
 let arc_iter f g = e_iter g f
+
+let count_node g = node_fold (fun x _ -> x+1) 0 g
 
 let clone_nodes g = node_fold new_node empty_graph g
 
@@ -33,7 +34,7 @@ let unify_arc g_old g_new =
 
 (* g représente le graph, a le point qui est en train d'être évalué,
    b le point d'arriver, acu est une liste qui retient la série de point par laquel on est passé*)
-let  find_path f g a b =
+let find_path f g a b =
   let rec arc_loop acu = function
     (* Si il n'y a plus d'arc à exploré on lève une exception avec la liste des neuds explorés *)
     | [] -> raise (No_Path acu)
@@ -49,60 +50,35 @@ let  find_path f g a b =
       with No_Path failed_acu -> arc_loop failed_acu q
   in arc_loop [a] (out_arcs g a)
 
+(* g représente le graph, a le point qui est en train d'être évalué,
+   b le point d'arriver state l'état*)
+let find_path_bell f1 f2 g a b =
+  (* Sert a retrouver le chemin final à partir de la dernière étape renvoi une liste d'arc*)
+  let path state =
+    let rec loop acu y =
+      let x = state.(y).acc in
+      if y = a then acu else if x = -1 then raise (No_Path [])
+      else loop ((Option.get (find_arc g x y))::acu) x
+    in loop [] b
+  in
 
-(*VA VOIR COMMENT FONCTION BELLMAN-FORD OU TU COMPRENDRA PAS*)
-(*VA VOIR COMMENT FONCTION BELLMAN-FORD OU TU COMPRENDRA PAS*)
-(*VA VOIR COMMENT FONCTION BELLMAN-FORD OU TU COMPRENDRA PAS*)
-(*VA VOIR COMMENT FONCTION BELLMAN-FORD OU TU COMPRENDRA PAS*)
-(*VA VOIR COMMENT FONCTION BELLMAN-FORD OU TU COMPRENDRA PAS*)
-(*VA VOIR COMMENT FONCTION BELLMAN-FORD OU TU COMPRENDRA PAS*)
+  (* Fonction permetant de mettre à jour le cout d'un tableau en fonction d'un arc *)
+  let update_cost state x =
+    (* test si l'arc est empruntable et calcul du nouveau cout *)
+    if not (f1 x) then let new_cost = state.(x.src).cost + (f2 x) in
+      (* Si il est plus aventage alors on met à jour le tableau *)
+      if state.(x.tgt).cost > new_cost then state.(x.tgt) <- {cost=new_cost; acc=x.src}
+  in
 
-(*Si ca trouve jamais de chemin augmente la taille de la matrice mais normalement c'est ok*)
+  let rec loop state=
+    (* On crée un nouveau tableau à partir de l'ancien état  *)
+    let state_new = Array.copy state in
 
-let find_path_Bell f1 f2 g a b =
+    (* On le met a jour, pour ca au lieu d'iterer sur tous ses élément on itère sur tous les arcs (plus rapide) *)
+    arc_iter (update_cost state_new) g;
 
-    (* On crée et on initalise la matrice pour le point de départ
-        de taille N * 15 (le 15 est choisie arbitrairement en esperant que ca suffise)*)
-    let init_Bell g a =
-        let m = make_matrix  15 (e_fold g (fun x _ -> x+1) 0) {cost=999;acc=(-1)} in
-        ref m.(0).(a) := {cost=0;acc=(a)}; m
-    in
-
-    (* On met a jour toute une colone de la matrice pour ca au lieu d'iterer sur tous les point de la colone
-        on itère sur tous les arcs (Ce qui est beaucoup plus rapide)
-        On regarde si l'arc est valide par F1 et si son cout et avantageux par F2*)
-    let rec maj f1 f2 m n l=
-    match l with
-    | [] -> ()
-    | x::rest ->
-        if (( not (f1 x)) && (m.(n).(x.tgt).cost > (m.(n-1).(x.src).cost + (f2 x))))
-            then ref (m.(n).(x.tgt)) := {cost=(m.(n-1).(x.src).cost + (f2 x)); acc = x.src};
-        maj f1 f2 m n rest
-    in
-
-    (*Sert a retrouver le chemin final à partir de la matrice
-        renvoi une liste d'arc*)
-    let rec path m g n a acu =
-        if n<0
-            then acu
-            else match find_arc g a m.(n).(a).acc with
-            | None -> assert false
-            | Some x -> path m g (n-1) (m.(n).(a).acc) (x::acu)
-    in
-
-    (*On regarde si la matrice est immobile, si oui on a fini,
-        sinon on met à jour la prochaine colone et on recommence
-        si on est a la fin du tableau et qu'on est pas stable alors on a pas trouver*)
-    let rec grosse_maj f1 f2 g b m n =
-
-        let liste_arc g = e_fold g (fun l x -> x::l) [] in
-        let step = maj f1 f2 m n (liste_arc g); grosse_maj f1 f2 g b m (n+1) in
-
-        if m.(n) = m.(n-1)
-            then path m g n b []
-            else if n = 15
-                then (No_Path [])
-                else step
-    in
-
-    grosse_maj f1 f2 g b (init_Bell g a) 1
+    (* On test si un changement à eu lieux si oui on continu sinon on renvois le chemin trouvé *)
+    if state = state_new then path state_new else loop state_new
+  in
+  (* On initialise notre avec le point de départ sans coût et les autre avec un grand cout *)
+  loop (Array.init (count_node g) (fun i -> {cost=(if i = 0 then 0 else 2048);acc=(-1)}))

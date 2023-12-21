@@ -24,15 +24,15 @@ let read_file path =
   let rec loop acu =
     try let line = String.trim (input_line infile)
       in loop (
-      if line = "" then acu
-      else try match line.[0] with
-        | 'D' -> Scanf.sscanf line "D %s %s" (new_dep_node acu)
-        | 'A' -> Scanf.sscanf line "A %s %s" (new_arr_node acu)
-        | 'L' -> Scanf.sscanf line "L %s %s %s" (new_choice_arc acu)
-        | '%' -> acu
-        | _ -> failwith "unknow char"
-        with e -> Printf.printf "Cannot read line - %s:\n%s\n%!" (Printexc.to_string e) line ; failwith "from_file"
-        )
+        if line = "" then acu
+        else try match line.[0] with
+          | 'D' -> Scanf.sscanf line "D %s %s" (new_dep_node acu)
+          | 'A' -> Scanf.sscanf line "A %s %s" (new_arr_node acu)
+          | 'L' -> Scanf.sscanf line "L %s %s %s" (new_choice_arc acu)
+          | '%' -> acu
+          | _ -> failwith "unknow char"
+          with e -> Printf.printf "Cannot read line - %s:\n%s\n%!" (Printexc.to_string e) line ; failwith "from_file"
+      )
     with End_of_file -> acu
   in let nodes, _, final_graph = loop ([(1,"Arrivé");(0,"Départ")], 2, new_node (new_node empty_graph 0) 1)
   in close_in infile ; (nodes, final_graph)
@@ -43,7 +43,7 @@ let export path dict g =
   (* Open a write-file. *)
   let ff = open_out path in
   let loop arc = Printf.fprintf ff "    %s->%s[xlabel=\"%s\",style=%s];\n"
-  (find_name arc.src dict) (find_name arc.tgt dict) (string_of_int arc.lbl.use) (if arc.lbl.use = 0 then "dotted" else if arc.lbl.spc = 0 then "bold" else "solid" )
+      (find_name arc.src dict) (find_name arc.tgt dict) (string_of_flow arc.lbl) (if is_empty arc then "dotted" else "solid" )
   in
 
   (* Write in this file. *)
