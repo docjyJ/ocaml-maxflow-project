@@ -40,3 +40,9 @@ val unify_arc: 'a graph -> 'b graph -> 'b graph
  * Il est possible d'ajouté une fonction qui permet de refusé le passage par un arc si elle est vrai.
  * @raise No_Path si il n'existe pas de chemin. *)
 val find_path: ('a arc -> bool) -> 'a graph -> id -> id -> 'a arc list
+
+(* Permet de trouver un chemin sur un Graph, utilise l'algo de Bellman-Ford
+ * Il est possible d'ajouté une fonction qui permet de refusé le passage par un arc si elle est vrai.
+ * Il est possible d'ajouté une fonction qui donne un cout aux differents arc.
+ * @raise No_Path si il n'existe pas de chemin. *)
+val find_path_Bell : ('a arc -> bool) -> ('a arc -> int) -> 'a graph -> id -> id -> 'a arc list
